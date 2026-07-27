@@ -12,7 +12,8 @@ public class LoanRequest {
     private LoanType loanType;
     private LocalDate startDate;
     private List<RateChange> rateChangeSchedule;
-// + getter/setter, + import java.util.List
+    private int interestOnlyMonths ;
+
 
     // class constructor
     public LoanRequest() {
@@ -29,12 +30,23 @@ public class LoanRequest {
         this.rateChangeSchedule= rateChangeSchedule ; 
     }
     public LoanRequest(BigDecimal principal, BigDecimal annualInterestRate, int termMonths,
-                    LoanType loanType, LocalDate startDate) {
+                    LoanType loanType, LocalDate startDate, int interestOnlyMonths) {
     this.principal = principal;
     this.annualInterestRate = annualInterestRate;
     this.termMonths = termMonths;
     this.loanType = loanType;
     this.startDate = startDate;
+    this.interestOnlyMonths= interestOnlyMonths;
+}
+
+    public LoanRequest(BigDecimal principal, BigDecimal annualInterestRate, int termMonths,
+                    LoanType loanType, LocalDate startDate ) {
+    this.principal = principal;
+    this.annualInterestRate = annualInterestRate;
+    this.termMonths = termMonths;
+    this.loanType = loanType;
+    this.startDate = startDate;
+    
 }
 
     // declare the menthods/functions for the classes implementing the LoanRequest interface 
@@ -99,6 +111,15 @@ public class LoanRequest {
     public void setRateChangeSchedule(List<RateChange> rateChangeSchedule){
         
         this.rateChangeSchedule= rateChangeSchedule;
+    }
+
+    public int getInterestOnlyMonths(){
+        return interestOnlyMonths;
+    }
+
+    public void setInterestOnlyMonths(int interestOnlyMonths){
+
+        this.interestOnlyMonths= interestOnlyMonths;
     }
 
 }
