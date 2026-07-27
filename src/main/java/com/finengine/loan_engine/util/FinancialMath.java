@@ -26,4 +26,14 @@ public final class FinancialMath {
     public static BigDecimal power(BigDecimal base, int exponent) {
         return base.pow(exponent, new MathContext(INTERMEDIATE_SCALE + 5, ROUNDING_MODE));
     }
+    public static BigDecimal calculateMonthlyPayment(BigDecimal principal, BigDecimal monthlyRate, int termMonths) {
+    if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {
+        return toMonetary(divide(principal, BigDecimal.valueOf(termMonths)));
+    }
+    BigDecimal onePlusR = BigDecimal.ONE.add(monthlyRate);
+    BigDecimal factor = power(onePlusR, termMonths);
+    BigDecimal numerator = principal.multiply(monthlyRate).multiply(factor);
+    BigDecimal denominator = factor.subtract(BigDecimal.ONE);
+    return toMonetary(divide(numerator, denominator));
+}
 }

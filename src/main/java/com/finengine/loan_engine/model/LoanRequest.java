@@ -2,6 +2,7 @@ package com.finengine.loan_engine.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class LoanRequest {
 
@@ -10,6 +11,8 @@ public class LoanRequest {
     private int termMonths;
     private LoanType loanType;
     private LocalDate startDate;
+    private List<RateChange> rateChangeSchedule;
+// + getter/setter, + import java.util.List
 
     // class constructor
     public LoanRequest() {
@@ -17,13 +20,22 @@ public class LoanRequest {
     // create the LoanRequest instance/object
 
     public LoanRequest(BigDecimal principal, BigDecimal annualInterestRate, int termMonths,
-                        LoanType loanType, LocalDate startDate) {
+                        LoanType loanType, LocalDate startDate,  List<RateChange> rateChangeSchedule ) {
         this.principal = principal;
         this.annualInterestRate = annualInterestRate;
         this.termMonths = termMonths;
         this.loanType = loanType;
         this.startDate = startDate;
+        this.rateChangeSchedule= rateChangeSchedule ; 
     }
+    public LoanRequest(BigDecimal principal, BigDecimal annualInterestRate, int termMonths,
+                    LoanType loanType, LocalDate startDate) {
+    this.principal = principal;
+    this.annualInterestRate = annualInterestRate;
+    this.termMonths = termMonths;
+    this.loanType = loanType;
+    this.startDate = startDate;
+}
 
     // declare the menthods/functions for the classes implementing the LoanRequest interface 
 
@@ -77,4 +89,16 @@ public class LoanRequest {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
+
+    // get and set the term object for the variable rate change schedule, the object stores the months with rates for the entire term
+
+    public List<RateChange> getRateChangeSchedule(){
+        return rateChangeSchedule;
+    }
+
+    public void setRateChangeSchedule(List<RateChange> rateChangeSchedule){
+        
+        this.rateChangeSchedule= rateChangeSchedule;
+    }
+
 }

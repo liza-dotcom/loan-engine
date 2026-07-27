@@ -20,7 +20,7 @@ public class FixedRateStrategy implements LoanCalculationStrategy {
         LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : LocalDate.now();
 
         BigDecimal monthlyRate = FinancialMath.divide(request.getAnnualInterestRate(), BigDecimal.valueOf(1200));
-        BigDecimal monthlyPayment = calculateMonthlyPayment(principal, monthlyRate, termMonths);
+        BigDecimal monthlyPayment = FinancialMath.calculateMonthlyPayment(principal, monthlyRate, termMonths);
 
         PaymentSchedule schedule = new PaymentSchedule();
         BigDecimal balance = principal;
@@ -54,22 +54,7 @@ public class FixedRateStrategy implements LoanCalculationStrategy {
 
         return schedule;
     }
-
-    private BigDecimal calculateMonthlyPayment(BigDecimal principal, BigDecimal monthlyRate, int termMonths) {
-        if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {
-            // for a 0% interest loan split principal evenly into term months
-            return FinancialMath.toMonetary(FinancialMath.divide(principal, BigDecimal.valueOf(termMonths)));
-        }
-
-        BigDecimal onePlusR = BigDecimal.ONE.add(monthlyRate);
-        BigDecimal factor = FinancialMath.power(onePlusR, termMonths);
-
-        BigDecimal numerator = principal.multiply(monthlyRate).multiply(factor);
-        BigDecimal denominator = factor.subtract(BigDecimal.ONE);
-
-        return FinancialMath.toMonetary(FinancialMath.divide(numerator, denominator));
-    }
-
+    
     @Override
     public LoanType getSupportedType() {
         return LoanType.FIXED;
