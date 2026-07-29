@@ -1,19 +1,37 @@
 package com.finengine.loan_engine.model;
 
+import jakarta.validation.constraints.*;
+
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class LoanRequest {
 
+    @NotNull(message = "Principal is required")
+    @DecimalMin(value = "0.01", message = "Principal must be positive")
+    @DecimalMax(value = "100000000", message = "Principal exceeds maximum allowed value")
     private BigDecimal principal;
-    private BigDecimal annualInterestRate;
-    private int termMonths;
-    private LoanType loanType;
-    private LocalDate startDate;
-    private List<RateChange> rateChangeSchedule;
-    private int interestOnlyMonths ;
 
+    @NotNull(message = "Annual interest rate is required")
+    @DecimalMin(value = "0.0", message = "Interest rate cannot be negative")
+    @DecimalMax(value = "100.0", message = "Interest rate cannot exceed 100%")
+    private BigDecimal annualInterestRate;
+
+    @Min(value = 1, message = "Term must be at least 1 month")
+    @Max(value = 360, message = "Term cannot exceed 360 months (30 years)")
+    private int termMonths;
+
+    @NotNull(message = "Loan type is required")
+    private LoanType loanType;
+
+    private LocalDate startDate;
+
+    private List<RateChange> rateChangeSchedule;
+
+    @Min(value = 0, message = "Interest-only months cannot be negative")
+    private int interestOnlyMonths;
 
     // class constructor
     public LoanRequest() {

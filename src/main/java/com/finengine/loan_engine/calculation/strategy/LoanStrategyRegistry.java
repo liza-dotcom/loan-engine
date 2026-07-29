@@ -1,5 +1,6 @@
 package com.finengine.loan_engine.calculation.strategy;
 
+import com.finengine.loan_engine.exception.UnsupportedLoanTypeException;
 import com.finengine.loan_engine.model.LoanType;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +22,10 @@ public class LoanStrategyRegistry {
     }
 
     public LoanCalculationStrategy getStrategy(LoanType type) {
-        LoanCalculationStrategy strategy = strategies.get(type);
-        if (strategy == null) {
-            throw new IllegalArgumentException("No calculation strategy registered for loan type: " + type);
-        }
-        return strategy;
+    LoanCalculationStrategy strategy = strategies.get(type);
+    if (strategy == null) {
+        throw new UnsupportedLoanTypeException(type);
     }
+    return strategy;
+}
 }

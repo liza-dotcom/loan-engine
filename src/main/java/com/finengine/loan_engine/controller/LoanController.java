@@ -2,6 +2,7 @@ package com.finengine.loan_engine.controller;
 
 import com.finengine.loan_engine.model.*;
 import com.finengine.loan_engine.service.LoanService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,17 +19,17 @@ public class LoanController {
     }
 
     @PostMapping("/calculate")
-    public PaymentSchedule calculate(@RequestBody LoanRequest request) {
+    public PaymentSchedule calculate(@Valid @RequestBody LoanRequest request) {
         return loanService.calculateSchedule(request);
     }
 
     @PostMapping("/summary")
-    public LoanSummary summary(@RequestBody LoanRequest request) {
+    public LoanSummary summary(@Valid @RequestBody LoanRequest request) {
         return loanService.calculateSummary(request);
     }
 
     @PostMapping("/compare")
-    public LoanComparison compare(@RequestBody LoanComparisonRequest request) {
+    public LoanComparison compare(@Valid @RequestBody LoanComparisonRequest request) {
         return loanService.compare(request.getFirstLoan(), request.getSecondLoan());
     }
 }
