@@ -43,6 +43,12 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = buildErrorBody(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleMalformedJson(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        Map<String, Object> body = buildErrorBody(HttpStatus.BAD_REQUEST,
+                "Malformed request body — check that all fields have valid values and types");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
 
     private Map<String, Object> buildErrorBody(HttpStatus status, String message) {
         Map<String, Object> body = new HashMap<>();
