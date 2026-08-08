@@ -29,7 +29,7 @@ The API is intentionally backend-only. The interactive Swagger UI link above ser
 
 **An edge case.** A loan configured as 100% interest-only i.e. when interest period equals the entire loan term, produces a division-by-zero in the standard amortization formula, since the number of months available to amortize any principal is zero. This was caught by a dedicated test case rather than in production, and resolved by treating the final period as a balloon payment — the loan's principal is fully due at term end rather than left open-ended.
 
-**Input validation, not just calculation correctness:** Every request is validated using **Jakarta Bean Validation** annotations before any calculation is performed. Invalid input—such as negative loan principals, out-of-range interest rates, invalid loan terms, or missing required fields is rejected with a structured **HTTP 400 Bad Request** response that clearly identifies the affected field and the reason for the validation failure, preventing malformed data from ever reaching the calculation engine.
+**Input validation, not just calculation correctness.** Every request is validated using **Jakarta Bean Validation** annotations before any calculation is performed. Invalid input, such as negative loan principals, out-of-range interest rates, invalid loan terms, or missing required fields is rejected with a structured **HTTP 400 Bad Request** response that clearly identifies the affected field and the reason for the validation failure, preventing malformed data from ever reaching the calculation engine.
 
 ## API Reference
 
@@ -69,7 +69,6 @@ docker compose up
 ```
 
 Builds the image and starts the API on `localhost:8080`.
-
 
 ## Testing
 
