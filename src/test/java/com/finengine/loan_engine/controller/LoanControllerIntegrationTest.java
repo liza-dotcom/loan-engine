@@ -112,4 +112,69 @@ class LoanControllerIntegrationTest {
                         .content(requestBody))
                 .andExpect(status().isBadRequest());
     }
+
+        @Test
+    void calculateRejectsVariableLoanWithoutRateSchedule() throws Exception {
+        String requestBody = """
+                {
+                    "principal": 400000,
+                    "annualInterestRate": 4.2,
+                    "termMonths": 300,
+                    "loanType": "VARIABLE"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/loans/calculate")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.rateScheduleValidForType")
+                        .value("VARIABLE loans need a rateChangeSchedule with at least one rate change"));
+    }
+
+    @Test
+    void compareRejectsMissingSecondLoan() throws Exception {
+        String requestBody = """
+                {
+                    "firstLoan": {
+                        "principal": 400000,
+                        "annualInterestRate": 4.8,
+                        "termMonths": 300,
+                        "loanType": "FIXED"
+                    }
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/loans/compare")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.secondLoan").value("Second loan is required"));
+    }
+
+    @Test
+    void compareValidatesFieldsInsideEachLoan() throws Exception {
+        String requestBody = """
+                {
+                    "firstLoan": {
+                        "principal": 400000,
+                        "annualInterestRate": 4.8,
+                        "termMonths": 300,
+                        "loanType": "FIXED"
+                    },
+                    "secondLoan": {
+                        "principal": 400000,
+                        "annualInterestRate": 4.2,
+                        "termMonths": 300,
+                        "loanType": "VARIABLE"
+                    }
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/loans/compare")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors['secondLoan.rateScheduleValidForType']").exists());
+    }
 }

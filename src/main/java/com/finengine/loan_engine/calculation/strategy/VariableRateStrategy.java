@@ -13,7 +13,9 @@ public class VariableRateStrategy implements LoanCalculationStrategy {
 
     @Override
     public PaymentSchedule calculate(LoanRequest request) {
-        List<RateChange> changes = request.getRateChangeSchedule();
+        List<RateChange> changes = request.getRateChangeSchedule() != null
+        ? request.getRateChangeSchedule()
+        : List.of(); 
         int totalTermMonths = request.getTermMonths();
         LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : LocalDate.now();
 

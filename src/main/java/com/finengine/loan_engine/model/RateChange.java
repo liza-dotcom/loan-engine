@@ -17,4 +17,6 @@ public class RateChange {
     public void setEffectiveMonth(int effectiveMonth) { this.effectiveMonth = effectiveMonth; }
     public BigDecimal getNewAnnualRate() { return newAnnualRate; }
     public void setNewAnnualRate(BigDecimal newAnnualRate) { this.newAnnualRate = newAnnualRate; }
+
+    
 }

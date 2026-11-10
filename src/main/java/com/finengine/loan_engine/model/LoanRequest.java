@@ -6,6 +6,8 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class LoanRequest {
 
@@ -138,6 +140,13 @@ public class LoanRequest {
     public void setInterestOnlyMonths(int interestOnlyMonths){
 
         this.interestOnlyMonths= interestOnlyMonths;
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "VARIABLE loans need a rateChangeSchedule with at least one rate change")
+    public boolean isRateScheduleValidForType() {
+        return loanType != LoanType.VARIABLE
+            || (rateChangeSchedule != null && !rateChangeSchedule.isEmpty());
     }
 
 }

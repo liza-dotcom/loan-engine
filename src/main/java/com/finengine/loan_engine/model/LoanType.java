@@ -6,3 +6,4 @@ public enum LoanType {
     VARIABLE,
     INTEREST_ONLY
 }
+
