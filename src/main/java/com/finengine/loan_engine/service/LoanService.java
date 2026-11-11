@@ -5,6 +5,7 @@ import com.finengine.loan_engine.model.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -34,12 +35,18 @@ public class LoanService {
                 .map(PaymentPeriod::getInterest)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Placeholder for actual mixed effective rates for variable-rate loans
-        // needs a weighted calculation across segments. Using the nominal
-        // starting rate for now.
-        BigDecimal effectiveRate = request.getAnnualInterestRate();
+        // Effective rate = the rate actually paid, weighted by how much was owed each month.
+        // Equals the nominal rate for fixed loans; reflects rate changes for variable loans.
+        BigDecimal balanceMonths = periods.stream()
+                .map(PaymentPeriod::getOpeningBalance)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal effectiveRate = totalInterest
+                .multiply(BigDecimal.valueOf(1200))
+                .divide(balanceMonths, 4, RoundingMode.HALF_EVEN);
 
         return new LoanSummary(totalPayment, totalInterest, totalPrincipal, effectiveRate);
+        
     }
 
     public LoanComparison compare(LoanRequest first, LoanRequest second) {
