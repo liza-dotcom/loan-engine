@@ -177,4 +177,25 @@ class LoanControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.fieldErrors['secondLoan.rateScheduleValidForType']").exists());
     }
+        @Test
+    void variableLoanEffectiveRateReflectsRateIncrease() throws Exception {
+        String requestBody = """
+                {
+                    "principal": 400000,
+                    "annualInterestRate": 4.2,
+                    "termMonths": 300,
+                    "loanType": "VARIABLE",
+                    "rateChangeSchedule": [{ "effectiveMonth": 25, "newAnnualRate": 5.5 }]
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/loans/summary")
+                        .contentType("application/json")
+                        .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.effectiveRate").value(
+                        org.hamcrest.Matchers.allOf(
+                                org.hamcrest.Matchers.greaterThan(4.2),
+                                org.hamcrest.Matchers.lessThan(5.5))));
+    }
 }
